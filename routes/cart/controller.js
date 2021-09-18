@@ -1,3 +1,4 @@
+const e = require("cors");
 const { Cart, Products, Users } = require("../../models");
 const { findById } = require("../../models/Users");
 
@@ -10,28 +11,37 @@ module.exports = {
 
             const result = await Cart.find({}).populate("user").populate("product");
 
-            res.status(200).json({ message: "Show data Products", data: result });
+            res.status(200).json({ message: "Show data cart", data: result });
         } catch (error) {
             console.log(error);
         }
     },
     addOne: async (req, res) => {
         try {
-            const user = await Users.findById(req.body.userId);
+            const user = await Users.findOne({email: req.body.email});
             const product = await Products.findById(req.body.productId);
-            
-
-            const model = new Cart({
-                ...req.body,...{user: user._id, product:product._id},
-            })
-            console.log("inp",model)
-            // const result = await Users.findOne({email: req.body.email})
+            if(user == null || product == null) {
+                res.status(404).json({ message: "Invalid Account or product"});
+            } else{
+                if(product.quantity == 0){
+                    return  res.status(404).json({ message: "Product not available"});
+                } else if(product.quantity < req.body.quantity){
+                    console.log("in")
+                    return  res.status(404).json({ message: "Product quantity not enough"});
+                }
+                let price = product.price * req.body.quantity;
+                let inp = {user: user._id, product:product._id, price: price, ...req.body}
+        
+            const model = new Cart(inp)
             model.save(function (err) {
                 if (err) return handleError(err);
-                // that's it!
               });
 
-            res.status(200).json({ message: "Add new Products", data: model });
+            res.status(200).json({ message: "Add new cart", data: model, infoPayment: `please transfer based on the amount your order:
+            name : Amir
+            no: 8735089123
+            Bank: BCA` });
+            }
         } catch (error) {
             console.log(error);
         }

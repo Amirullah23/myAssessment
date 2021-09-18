@@ -12,6 +12,11 @@ const cartSchema = new Schema({
     },
     status: {
         type: String,
+        required: true,
+        default: "not yet paid"
+    },
+    quantity: {
+        type: Number,
         required: true
     },
     price: {
