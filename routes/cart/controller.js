@@ -1,13 +1,9 @@
-const e = require("cors");
 const { Cart, Products, Users } = require("../../models");
-const { findById } = require("../../models/Users");
+
 
 module.exports = {
     getAll: async (req, res) => {
         try {
-            const user = await Users.findById(req.body.userId);
-            const product = await Products.findById(req.body.productId);
-
 
             const result = await Cart.find({}).populate("user").populate("product");
 
@@ -37,11 +33,19 @@ module.exports = {
                 if (err) return handleError(err);
               });
 
-            res.status(200).json({ message: "Add new cart", data: model, infoPayment: `please transfer based on the amount your order:
-            name : Amir
-            no: 8735089123
-            Bank: BCA` });
+            res.status(200).json({ message: "Add new cart", data: model, infoPayment: `please transfer based on the amount your order: name : Amir, no: 8735089123, Bank: BCA` });
             }
+        } catch (error) {
+            console.log(error);
+        }
+    },
+    pay: async (req, res) => {
+        try {
+            const model = await Cart.updateOne({ _id: req.body.cartId }, { status: "already paid" });
+            model.n;
+            model.nModified;
+            res.status(200).json({ message: "update payment",data: model});
+          
         } catch (error) {
             console.log(error);
         }

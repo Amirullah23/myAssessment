@@ -15,6 +15,8 @@ app.use("/", require("./routes"));
 app.use("/users", require("./routes/users"));
 app.use("/product", require("./routes/products"));
 app.use("/cart", require("./routes/cart"));
+app.use("/shipping", require("./routes/shipping"));
+
 
 
 

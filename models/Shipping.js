@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-const userSchema = new Schema({
+const shippingSchema = new Schema({
     name: {
         type: String,
         required: true
@@ -14,17 +14,21 @@ const userSchema = new Schema({
         type: String,
         required: true
     },
-    password: {
+    address: {
         type: String,
         required: true
     },
-    role: {
+    statusOrder: {
         type: String,
-        default: "customer"
-
-    }
+        required: true,
+        default: "not verify"
+    },
+    cart: {
+        type:[{ type: Schema.Types.ObjectId, ref: 'cart' }],
+        required: true 
+    },
 }, { timestamps: true });
 
-const Users = mongoose.model("users", userSchema);
+const Shipping = mongoose.model("shipping", shippingSchema);
 
-module.exports = Users;
+module.exports = Shipping;
